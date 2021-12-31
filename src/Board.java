@@ -98,11 +98,11 @@ public class Board {
 
         for (int i = 0; i < 4; i++) //connect "4"
         {
-            if(board[column][row] == AI_NUMBER)
+            if(board[row][column] == AI_NUMBER)
             {
                 ai_points++;
             }
-            else if (board[column][row] == PLAYER_NUMBER)
+            else if (board[row][column] == PLAYER_NUMBER)
             {
                 player_points++;
             }
@@ -121,10 +121,20 @@ public class Board {
 
     public Board makeCopy() {
         Board newBoard = new Board(length, height);
+        int[][] newBoardData = new int[height][length];
+        for (int i = 0; i < this.board.length; i++) {
+            for (int j = 0; j < this.board[i].length; j++) {
+                newBoardData[i][j] = this.board[i][j];
+            }
+        }
+        newBoard.board = newBoardData;
         return newBoard;
     }
 
     public void makeMove(int col, boolean isAI) {
+        if (col < 0) {
+            throw new IllegalArgumentException("col must be greater than zero");
+        }
         int currentHeight = 0;
         while (currentHeight < this.height - 1) {
             if (this.board[(this.height - 1) - currentHeight][col] == 0) {
