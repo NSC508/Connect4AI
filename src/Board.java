@@ -139,6 +139,10 @@ public class Board {
         }
     }
 
+    public boolean canMakeMove(int col) {
+        return this.board[0][col] == 0;
+    }
+
     private boolean isHorizontal(int i, int j, boolean isAI) {
         int playerNum;
         if (isAI) {
