@@ -4,16 +4,6 @@ import java.util.Scanner;
 
 public class main{
     public static void main(String[] args) {
-        // int DEPTH = 2;
-        // Board connect4Board = new Board();
-        // connect4Board.makeMove(2, true);
-        // connect4Board.makeMove(3, true);
-        // connect4Board.makeMove(4, true);
-        // connect4Board.makeMove(5, true);
-        // System.out.println(connect4Board);
-        // HashMap<Boolean, HashMap<Board, Board>> transpositionTableFull = new HashMap<Boolean, HashMap<Board, Board>>();
-        // connect4Board = minimax(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
-        // System.out.println(connect4Board);
         playGame();
     }
 
