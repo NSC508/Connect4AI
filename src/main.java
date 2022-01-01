@@ -1,15 +1,56 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class main{
     public static void main(String[] args) {
+        // int DEPTH = 2;
+        // Board connect4Board = new Board();
+        // connect4Board.makeMove(2, true);
+        // connect4Board.makeMove(3, true);
+        // connect4Board.makeMove(4, true);
+        // connect4Board.makeMove(5, true);
+        // System.out.println(connect4Board);
+        // HashMap<Boolean, HashMap<Board, Board>> transpositionTableFull = new HashMap<Boolean, HashMap<Board, Board>>();
+        // connect4Board = minimax(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
+        // System.out.println(connect4Board);
+        playGame();
+    }
+
+    public static void playGame() {
         int DEPTH = 10;
-        Board connect4Board = new Board(5, 6);
-        connect4Board.makeMove(0, true);
-        connect4Board.makeMove(0, false);
+        System.out.println("Hello! Welcome to this game of connect 4!");
+        System.out.println("Would you like to start first, or would you like the AI to move first?");
+        System.out.println("Enter Y if you want to move first, N if you want the AI to move first");
+        Scanner scanner = new Scanner(System.in);
+        boolean isAI = scanner.nextLine().toLowerCase() == "n";
+        Board connect4Board = new Board();
         HashMap<Boolean, HashMap<Board, Board>> transpositionTableFull = new HashMap<Boolean, HashMap<Board, Board>>();
-        connect4Board = minimax(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
+        System.out.println("The board looks like so:");
         System.out.println(connect4Board);
+        while (!connect4Board.isWinningBoard()) {
+            if (isAI) {
+                connect4Board = minimax(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
+                if (connect4Board.isWinningBoard()) {
+                    System.out.println("The AI won!");
+                }
+            } else {
+                System.out.println(
+                    "Where would you like to place your piece? Enter a number between 0 and "
+                    + connect4Board.length
+                    + ". Enter a number less than 0 if you would like to quit");
+                int col = scanner.nextInt();
+                if (col < 0) {
+                    System.out.println("Thanks for playing!");
+                    break;
+                }
+                connect4Board.makeMove(col, isAI);
+            }
+            System.out.println("The board looks like so:");
+            System.out.println(connect4Board);
+            isAI = !isAI;
+        }
+        scanner.close(); 
     }
 
     private static Board minimax(

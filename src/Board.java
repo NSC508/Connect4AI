@@ -36,13 +36,17 @@ public class Board {
             for (int j = 0; j < this.board[i].length; j++) {
                 if (board[i][j] != 0) {
                     if (board[i][j] == PLAYER_NUMBER) {
-                        return isHorizontal(i, j, false) ||
+                        if (isHorizontal(i, j, false) ||
                         isVertical(i, j, false) ||
-                        isDiagonal(i, j, false);
+                        isDiagonal(i, j, false)) {
+                            return true;
+                        }
                     } else {
-                        return isHorizontal(i, j, true) ||
+                        if (isHorizontal(i, j, true) ||
                         isVertical(i, j, true) ||
-                        isDiagonal(i, j, true);
+                        isDiagonal(i, j, true)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -160,20 +164,22 @@ public class Board {
         } else {
             playerNum = PLAYER_NUMBER;
         }
+        int countInARowLeft = 0;
+        int countInARowRight = 0;
         //Chcek 4 to the left and right to see if we find anything that is not the player
         for (int row = 0; row < 4; row++) {
             if (j + row < this.length) {
-                if (this.board[i][j + row] != playerNum) {
-                    return false;
+                if (this.board[i][j + row] == playerNum) {
+                    countInARowRight++;
                 }
             } 
             if (j - row > 0) {
-                if (this.board[i][j - row] != playerNum) {
-                    return false;
+                if (this.board[i][j - row] == playerNum) {
+                    countInARowLeft++;
                 }
             }
         }
-        return true;
+        return (countInARowRight == 4 || countInARowLeft == 4);
     }
 
     private boolean isVertical(int i, int j, boolean isAI) {
@@ -183,20 +189,22 @@ public class Board {
         } else {
             playerNum = PLAYER_NUMBER;
         }
+        int countInARowUp = 0;
+        int countInARowDown = 0;
         //Check 4 on top and bottom to see if we find anything that is not the player
         for (int col = 0; col < 4; col++) {
-            if (i + height < this.height) {
-                if (this.board[i + col][j] != playerNum) {
-                    return false;
+            if (i + col < this.height) {
+                if (this.board[i + col][j] == playerNum) {
+                    countInARowDown++;
                 }
             } 
             if (i - col > 0) {
-                if (this.board[i - col][j] != playerNum) {
-                    return false;
+                if (this.board[i - col][j] == playerNum) {
+                    countInARowUp++;
                 }
             }
         }
-        return true;
+        return (countInARowUp == 4 || countInARowDown == 4);
     }
 
     private boolean isDiagonal(int i, int j, boolean isAI) {
@@ -206,19 +214,21 @@ public class Board {
         } else {
             playerNum = PLAYER_NUMBER;
         }
+        int countInARowLeft = 0; 
+        int countInARowRight = 0;
         //Check diagonally left and right to see if we find anything that is not the player
         for (int diag = 0; diag < 4; diag++) {
-            if (i + diag < this.height && j + diag < this.length) {
-                if (this.board[i + diag][j + diag] != playerNum) {
-                    return false;
+            if (i - diag > 0 && j + diag < this.length) {
+                if (this.board[i - diag][j + diag] == playerNum) {
+                    countInARowRight++;
                 }
             }
-            if (i - diag > 0 && j - diag  > 0) {
-                if (this.board[i - diag][j - diag] != playerNum) {
-                    return false;
+            if (i + diag < this.height && j - diag  > 0) {
+                if (this.board[i + diag][j - diag] == playerNum) {
+                    countInARowLeft++;
                 }
             }
         }
-        return true;
+        return (countInARowLeft == 4 || countInARowRight == 4);
     }
 }
