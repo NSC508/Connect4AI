@@ -5,8 +5,8 @@ import java.util.Scanner;
 public class main{
     public static void main(String[] args) {
         playGame();
-    }
-
+    } 
+    
     public static void playGame() {
         int DEPTH = 10;
         System.out.println("Hello! Welcome to this game of connect 4!");
@@ -20,7 +20,7 @@ public class main{
         System.out.println(connect4Board);
         while (!connect4Board.isWinningBoard()) {
             if (isAI) {
-                connect4Board = minimax(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
+                connect4Board = alphaBeta(connect4Board, DEPTH, Integer.MIN_VALUE, Integer.MAX_VALUE, true, transpositionTableFull);
                 if (connect4Board.isWinningBoard()) {
                     System.out.println("The AI won!");
                 }
@@ -43,60 +43,61 @@ public class main{
         scanner.close(); 
     }
 
-    private static Board minimax(
-        Board currentBoard,
-        int depth,
-        int alpha,
-        int beta,
-        boolean isAI,
-        HashMap<Boolean, HashMap<Board, Board>> transpositionTableFull
-        ) {
-        if (depth == 0 || currentBoard.isWinningBoard()) {
-            return currentBoard;
+    //visited array
+    public static boolean[] visited = new boolean[10];
+
+    //alpha-beta pruning that returns the best graph with a transposition table that has board as inputs and board as outputs
+    public static Board alphaBeta(Board board, int depth, int alpha, int beta, boolean isMax, HashMap<Boolean, HashMap<Board, Board>> transpositionTableFull) {
+        if (depth == 0 || board.isWinningBoard()) {
+            return board;
         }
-        if (transpositionTableFull.size() == 0) {
-            transpositionTableFull.put(isAI, new HashMap<Board, Board>());
-            transpositionTableFull.put(!isAI, new HashMap<Board, Board>());
-        }
-        Map<Board, Board> transpositionTable = transpositionTableFull.get(isAI);
-        if (transpositionTable.keySet().contains(currentBoard)) {
-            return transpositionTable.get(currentBoard);
-        }
-        Board bestBoard = currentBoard.makeCopy();
-        if (isAI) {
-            int value = Integer.MIN_VALUE;
-            for (int i = 0; i < currentBoard.length; i++) {
-                if (currentBoard.canMakeMove(i)) {
-                    Board child = currentBoard.makeCopy();
-                    child.makeMove(i, isAI);
-                    int bestFromChildHueristic = minimax(child, depth - 1, alpha, beta, false, transpositionTableFull).heuristic();
-                    if (bestFromChildHueristic > value) {
-                        value = bestFromChildHueristic;
-                        bestBoard = child;
+        int player = isMax ? Board.AI_NUMBER : Board.PLAYER_NUMBER;
+        if (isMax) {
+            int bestScore = Integer.MIN_VALUE;
+            Board bestBoard = null;
+            for (int i = 0; i < board.length; i++) {
+                if (board.canMakeMove(i)) {
+                    Board newBoard = board.makeMove(i, isMax);
+                    if (transpositionTableFull.containsKey(isMax) && transpositionTableFull.get(isMax).containsKey(newBoard)) {
+                        newBoard = transpositionTableFull.get(isMax).get(newBoard);
+                    } else {
+                        newBoard = alphaBeta(newBoard, depth - 1, alpha, beta, false, transpositionTableFull);
+                        transpositionTableFull.get(isMax).put(newBoard, newBoard);
                     }
-                    alpha = Math.max(alpha, value); 
-                    if (value >= beta) {
+                    if (newBoard.hueristic(newBoard.board, player) > bestScore) {
+                        bestScore = newBoard.hueristic(newBoard.board, player);
+                        bestBoard = newBoard;
+                    }
+                    alpha = Math.max(alpha, bestScore);
+                    if (beta <= alpha) {
                         break;
                     }
                 }
             }
+            return bestBoard;
         } else {
-            int value = Integer.MAX_VALUE;
-            for (int i = 0; i < currentBoard.length; i++) {
-                Board child = currentBoard.makeCopy();
-                child.makeMove(i, isAI);
-                int bestFromChildHueristic = minimax(child, depth - 1, alpha, beta, true, transpositionTableFull).heuristic();
-                if (bestFromChildHueristic < value) {
-                    value = bestFromChildHueristic;
-                    bestBoard = child;
-                }
-                beta = Math.min(beta, value);
-                if (value <= alpha) {
-                    break;
+            int bestScore = Integer.MAX_VALUE;
+            Board bestBoard = null;
+            for (int i = 0; i < board.length; i++) {
+                if (board.canMakeMove(i)) {
+                    Board newBoard = board.makeMove(i, isMax);
+                    if (transpositionTableFull.containsKey(isMax) && transpositionTableFull.get(isMax).containsKey(newBoard)) {
+                        newBoard = transpositionTableFull.get(isMax).get(newBoard);
+                    } else {
+                        newBoard = alphaBeta(newBoard, depth - 1, alpha, beta, true, transpositionTableFull);
+                        transpositionTableFull.get(isMax).put(newBoard, newBoard);
+                    }
+                    if (newBoard.hueristic(newBoard.board, player) < bestScore) {
+                        bestScore = newBoard.hueristic(newBoard.board, player);
+                        bestBoard = newBoard;
+                    }
+                    beta = Math.min(beta, bestScore);
+                    if (beta <= alpha) {
+                        break;
+                    }
                 }
             }
+            return bestBoard;
         }
-        transpositionTable.put(currentBoard, bestBoard);
-        return bestBoard;
     }
 }

@@ -54,73 +54,45 @@ public class Board {
         return false;
     }
 
-    public int heuristic() {
-        int vertical_points=0, horizontal_points=0, descDiagonal_points=0, ascDiagonal_points=0, total_points=0;
+    //parent array
+    public static int[] parent = new int[10];
 
-        for (int row = 0; row < this.height - 3; row++) {
-            for (int column = 0; column < this.length; column++) {
-                int tempScore = calcScorePosition(row, column, 1, 0);
-                vertical_points += tempScore;
-                if(tempScore >= MAX_WINNING_SCORE || tempScore <= MIN_WINNING_SCORE)
-                    return tempScore;
+    //connect4 evaluation function that takes into account the number of pieces in a row for each player
+    public int hueristic(int[][] board, int player) {
+        if (isWinningBoard()) {
+            return MAX_WINNING_SCORE;
+        }
+        if (player == PLAYER_NUMBER) {
+            return -1 * hueristic(board, PLAYER_NUMBER);
+        }
+        int score = 0;
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                if (board[i][j] == player) {
+                    score += 1;
+                } else if (board[i][j] == 0) {
+                    score += 0;
+                } else {
+                    score -= 1;
+                }
             }
         }
-
-        for (int row = 0; row < this.height ; row++) {
-            for (int column = 0; column < this.length - 3; column++) {
-                int tempScore = calcScorePosition(row, column, 0, 1);
-                horizontal_points += tempScore;
-                if(tempScore >= MAX_WINNING_SCORE || tempScore <= MIN_WINNING_SCORE)
-                    return tempScore;
-            }
-        }
-
-        for (int row = 0; row < this.height - 3 ; row++) {
-            for (int column = 0; column < this.length - 3; column++) {
-                int tempScore = calcScorePosition(row, column, 1, 1);
-                descDiagonal_points += tempScore;
-                if(tempScore >= MAX_WINNING_SCORE || tempScore <= MIN_WINNING_SCORE)
-                    return tempScore;
-            }
-        }
-
-        for (int row = 3; row < this.height  ; row++) {
-            for (int column = 0; column < this.length - 4; column++) {
-                int tempScore = calcScorePosition(row, column, -1, 1);
-                ascDiagonal_points += tempScore;
-                if(tempScore >= MAX_WINNING_SCORE || tempScore <= MIN_WINNING_SCORE)
-                    return tempScore;
-            }
-        }
-
-        total_points = vertical_points + horizontal_points + descDiagonal_points + ascDiagonal_points;
-        return total_points;
+        return score;
     }
 
-    private int calcScorePosition(int row, int column, int increment_row, int increment_col) {
-        int ai_points = 0, player_points = 0;
-
-        for (int i = 0; i < 4; i++) //connect "4"
-        {
-            if(board[row][column] == AI_NUMBER)
-            {
-                ai_points++;
-            }
-            else if (board[row][column] == PLAYER_NUMBER)
-            {
-                player_points++;
-            }
-
-            row += increment_row;
-            column += increment_col;
+    //Find function
+    public static int find(int[] parent, int i) {
+        while (parent[i] != i) {
+            i = parent[i];
         }
+        return i;
+    } 
 
-        if(player_points == 4)
-            return MIN_WINNING_SCORE;
-        else if(ai_points == 4)
-            return MAX_WINNING_SCORE;
-        else
-            return ai_points;
+    //union function
+    public static void union(int[] parent, int i, int j) {
+        int root1 = find(parent, i);
+        int root2 = find(parent, j);
+        parent[root1] = root2;
     }
 
     public Board makeCopy() {
@@ -135,22 +107,24 @@ public class Board {
         return newBoard;
     }
 
-    public void makeMove(int col, boolean isAI) {
+    public Board makeMove(int col, boolean isAI) {
         if (col < 0) {
             throw new IllegalArgumentException("col must be greater than zero");
         }
+        Board toBeReturned = this.makeCopy();
         int currentHeight = 0;
         while (currentHeight < this.height - 1) {
-            if (this.board[(this.height - 1) - currentHeight][col] == 0) {
+            if (toBeReturned.board[(this.height - 1) - currentHeight][col] == 0) {
                 if (isAI) {
-                    this.board[(this.height - 1) - currentHeight][col] = AI_NUMBER;
+                    toBeReturned.board[(this.height - 1) - currentHeight][col] = AI_NUMBER;
                 } else {
-                    this.board[(this.height - 1) - currentHeight][col] = PLAYER_NUMBER;
+                    toBeReturned.board[(this.height - 1) - currentHeight][col] = PLAYER_NUMBER;
                 }
                 break;
             }
             currentHeight++;
         }
+        return toBeReturned;
     }
 
     public boolean canMakeMove(int col) {

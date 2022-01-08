@@ -8,6 +8,10 @@ public class Gene {
         this.innovation_number = innovation_number;
     }
 
+    public Gene() {
+        
+    }
+
     //returns the innovation number
     public int getInnovationNumber() {
         return innovation_number;

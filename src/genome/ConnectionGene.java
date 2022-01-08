@@ -10,11 +10,10 @@ public class ConnectionGene extends Gene{
     private boolean enabled = true;
 
     //constructor
-    public ConnectionGene(int innovation_number, NodeGene from, NodeGene to, double weight) {
-        super(innovation_number);
+    public ConnectionGene(NodeGene from, NodeGene to) {
+        super();
         this.from = from;
         this.to = to;
-        this.weight = weight;
     }
 
     //returns the from node

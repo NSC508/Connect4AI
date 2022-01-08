@@ -3,6 +3,8 @@ package data_structures;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import genome.Gene;
+
 public class RandomHashSet<T> {
     HashSet<T> set;
     ArrayList<T> data;
@@ -36,6 +38,20 @@ public class RandomHashSet<T> {
         }
     }
 
+    //adds a Gene to the RandomHashSet in a sorted way
+    public void addSorted(Gene object) {
+        for (int i = 0; i < this.size(); i++) {
+            int innovation = ((Gene)data.get(i)).getInnovationNumber();
+            if (object.getInnovationNumber() < innovation) {
+                data.add(i, (T) object);
+                set.add((T) object);
+                return;
+            }
+        }
+        data.add((T)object);
+        set.add((T)object);
+    }
+
     //clear the RandomHashSet
     public void clear() {
         set.clear();
@@ -57,5 +73,14 @@ public class RandomHashSet<T> {
     public void remove(T obj) {
         set.remove(obj);
         data.remove(obj);
+    }
+
+    //getters
+    public HashSet<T> getSet() {
+        return set;
+    }
+
+    public ArrayList<T> getData() {
+        return data;
     }
 }

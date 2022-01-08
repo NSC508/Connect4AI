@@ -9,7 +9,20 @@ import genome.NodeGene;
 
 public class Neat {
     public static final int MAX_NODES = (int) Math.pow(2, 20);
+
+    private double C1 = 1;
+    private double C2 = 1;
+    private double C3 = 1;
     
+    private double WEIGHT_SHIFT_STRENGTH = 0.3; 
+    private double WEIGHT_RANDOM_STRENGTH = 1;
+
+    private double PROBABILITY_MUTATE_LINK = 0.4;
+    private double PROBABILITY_MUTATE_NODE = 0.4;
+    private double PROBABILITY_MUTATE_WEIGHT_SHIFT = 0.4;
+    private double PROBABILITY_MUTATE_WEIGHT_RANDOM = 0.4;
+    private double PROBABILITY_MUTATE_TOGGLE_LINK = 0.4;
+
     private HashMap<ConnectionGene, ConnectionGene> allConnections = new HashMap<ConnectionGene, ConnectionGene>();
     private RandomHashSet<NodeGene> allNodes = new RandomHashSet<NodeGene>();
     private int inputSize; 
@@ -55,12 +68,13 @@ public class Neat {
     }
 
     //copy a connection gene
-    public static ConnectionGene getConnection(ConnectionGene con) {
+    public ConnectionGene getConnection(ConnectionGene con) {
         ConnectionGene c = new ConnectionGene(con.getFrom(), con.getTo());
         c.setWeight(con.getWeight());
         c.setEnabled(con.isEnabled());
         return c;
     }
+
     //gets a connection between two nodes
     public ConnectionGene getConnection(NodeGene from, NodeGene to) {
         ConnectionGene connectionGene = new ConnectionGene(from, to);
@@ -71,6 +85,8 @@ public class Neat {
             connectionGene.setInnovationNumber(allConnections.size() + 1);
             allConnections.put(connectionGene, connectionGene);
         }
+
+        return connectionGene;
     }
 
     //gets a new node
@@ -101,6 +117,46 @@ public class Neat {
         return maxClients;
     }
 
+    public double getC1() {
+        return C1;
+    }
+
+    public double getC2() {
+        return C2;
+    }
+
+    public double getC3() {
+        return C3;
+    }
+
+    public double getWeightShiftStrength() {
+        return WEIGHT_SHIFT_STRENGTH;
+    }
+
+    public double getWeightRandomStrength() {
+        return WEIGHT_RANDOM_STRENGTH;
+    }
+
+    public double getProbabilityMutateLink() {
+        return PROBABILITY_MUTATE_LINK;
+    }
+
+    public double getProbabilityMutateNode() {
+        return PROBABILITY_MUTATE_NODE;
+    }
+
+    public double getProbabilityMutateWeightShift() {
+        return PROBABILITY_MUTATE_WEIGHT_SHIFT;
+    }
+
+    public double getProbabilityMutateWeightRandom() {
+        return PROBABILITY_MUTATE_WEIGHT_RANDOM;
+    }
+
+    public double getProbabilityMutateToggleLink() {
+        return PROBABILITY_MUTATE_TOGGLE_LINK;
+    }
+
     //setters
     public void setInputSize(int inputSize) {
         this.inputSize = inputSize;
@@ -112,6 +168,18 @@ public class Neat {
 
     public void setClients(int clients) {
         this.maxClients = clients;
+    }
+
+    public void setC1(double c1) {
+        C1 = c1;
+    }
+
+    public void setC2(double c2) {
+        C2 = c2;
+    }
+
+    public void setC3(double c3) {
+        C3 = c3;
     }
 
     //main
