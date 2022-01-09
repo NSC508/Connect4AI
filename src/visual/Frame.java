@@ -118,10 +118,9 @@ public class Frame extends JFrame {
         buttonG.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.err.println("Not yet implemented");
-//                Calculator c = new Calculator(genome);
-//                System.out.println(Arrays.toString(c.calculate(1,1,1,1,1,1,1,1,1,1)));
-//                repaint();
+                genome.generateCalculator();
+                System.out.println(Arrays.toString(genome.calculate(1,1,1)));
+                repaint();
             }
         });
         menu.add(buttonG);

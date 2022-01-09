@@ -6,6 +6,7 @@ import data_structures.RandomHashSet;
 import genome.ConnectionGene;
 import genome.Genome;
 import genome.NodeGene;
+import visual.Frame;
 
 public class Neat {
     public static final int MAX_NODES = (int) Math.pow(2, 20);
@@ -184,8 +185,7 @@ public class Neat {
 
     //main
     public static void main(String[] args) {
-        Neat neat = new Neat(3, 3, 100);
-        Genome g = neat.createGenome();
-        System.out.println(g.getNodes().size());
+        Neat neat = new Neat(3, 2, 0);
+        new Frame(neat.createGenome());
     }
 }

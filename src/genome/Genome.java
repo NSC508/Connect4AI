@@ -1,5 +1,6 @@
 package genome;
 
+import calculations.Calculator;
 import data_structures.RandomHashSet;
 import neat.Neat;
 
@@ -7,6 +8,7 @@ public class Genome {
     private RandomHashSet<ConnectionGene> connections = new RandomHashSet<ConnectionGene>();
     private RandomHashSet<NodeGene> nodes = new RandomHashSet<NodeGene>();
     private Neat neat;
+    private Calculator calculator;
 
 
     //constructor
@@ -63,6 +65,19 @@ public class Genome {
         }
 
         return neat.getC1() *  disjoint / N + neat.getC2() * excess / N + neat.getC3() * weight_diff;
+    }
+
+    //generates the calculator 
+    public void generateCalculator() {
+        calculator = new Calculator(this);
+    }
+
+    //calculates an array of double 
+    public double[] calculate(double... input) {
+        if (calculator != null) {
+            return calculator.calculate(input);
+        }
+        return null;
     }
 
     //mutate method
