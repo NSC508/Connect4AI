@@ -14,6 +14,7 @@ public class Neat {
     private double C1 = 1;
     private double C2 = 1;
     private double C3 = 1;
+    private double CP = 4; 
     
     private double WEIGHT_SHIFT_STRENGTH = 0.3; 
     private double WEIGHT_RANDOM_STRENGTH = 1;
@@ -71,6 +72,7 @@ public class Neat {
     //copy a connection gene
     public ConnectionGene getConnection(ConnectionGene con) {
         ConnectionGene c = new ConnectionGene(con.getFrom(), con.getTo());
+        c.setInnovationNumber(con.getInnovationNumber());
         c.setWeight(con.getWeight());
         c.setEnabled(con.isEnabled());
         return c;
@@ -158,6 +160,10 @@ public class Neat {
         return PROBABILITY_MUTATE_TOGGLE_LINK;
     }
 
+    public double getCP() {
+        return CP;
+    }
+
     //setters
     public void setInputSize(int inputSize) {
         this.inputSize = inputSize;
@@ -183,6 +189,38 @@ public class Neat {
         C3 = c3;
     }
 
+    public void setWeightShiftStrength(double weightShiftStrength) {
+        WEIGHT_SHIFT_STRENGTH = weightShiftStrength;
+    }
+
+    public void setWeightRandomStrength(double weightRandomStrength) {
+        WEIGHT_RANDOM_STRENGTH = weightRandomStrength;
+    }
+
+    public void setProbabilityMutateLink(double probabilityMutateLink) {
+        PROBABILITY_MUTATE_LINK = probabilityMutateLink;
+    }
+
+    public void setProbabilityMutateNode(double probabilityMutateNode) {
+        PROBABILITY_MUTATE_NODE = probabilityMutateNode;
+    }
+
+    public void setProbabilityMutateWeightShift(double probabilityMutateWeightShift) {
+        PROBABILITY_MUTATE_WEIGHT_SHIFT = probabilityMutateWeightShift;
+    }
+
+    public void setProbabilityMutateWeightRandom(double probabilityMutateWeightRandom) {
+        PROBABILITY_MUTATE_WEIGHT_RANDOM = probabilityMutateWeightRandom;
+    }
+
+    public void setProbabilityMutateToggleLink(double probabilityMutateToggleLink) {
+        PROBABILITY_MUTATE_TOGGLE_LINK = probabilityMutateToggleLink;
+    }
+
+    public void setCP(double CP) {
+        this.CP = CP;
+    }
+    
     //main
     public static void main(String[] args) {
         Neat neat = new Neat(3, 2, 0);

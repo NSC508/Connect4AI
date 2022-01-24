@@ -8,7 +8,6 @@ public class Genome {
     private RandomHashSet<ConnectionGene> connections = new RandomHashSet<ConnectionGene>();
     private RandomHashSet<NodeGene> nodes = new RandomHashSet<NodeGene>();
     private Neat neat;
-    private Calculator calculator;
 
 
     //constructor
@@ -20,8 +19,16 @@ public class Genome {
     public double distance(Genome g2) {
         Genome g1 = this; 
 
-        int highestInnovationGene1 = g1.getConnections().get(g1.getConnections().size() - 1).getInnovationNumber();
-        int highestInnovationGene2 = g2.getConnections().get(g2.getConnections().size() - 1).getInnovationNumber();
+        int highestInnovationGene1 = 0; 
+        int highestInnovationGene2 = 0;
+
+        if (g1.getConnections().size() != 0) {
+            highestInnovationGene1 = g1.getConnections().get(g1.getConnections().size() - 1).getInnovationNumber();
+        }
+
+        if (g2.getConnections().size() != 0) {
+            highestInnovationGene2 = g2.getConnections().get(g2.getConnections().size() - 1).getInnovationNumber();
+        }
 
         if (highestInnovationGene1 < highestInnovationGene2) {
             Genome g = g1; 
@@ -65,19 +72,6 @@ public class Genome {
         }
 
         return neat.getC1() *  disjoint / N + neat.getC2() * excess / N + neat.getC3() * weight_diff;
-    }
-
-    //generates the calculator 
-    public void generateCalculator() {
-        calculator = new Calculator(this);
-    }
-
-    //calculates an array of double 
-    public double[] calculate(double... input) {
-        if (calculator != null) {
-            return calculator.calculate(input);
-        }
-        return null;
     }
 
     //mutate method
